@@ -1,0 +1,15 @@
+.hero{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* align-items: center; */
+    text-align: center;
+    background: linear-gradient(to right,#f5f7fa,#e4ecf7);
+}
+
+.buttons button{
+    margin: 10px;
+    /* padding: 10px 20px; */
+    cursor: pointer;
+}
