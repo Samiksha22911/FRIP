@@ -1,18 +1,31 @@
 import { motion } from "framer-motion";
-
-const stats = [
-  { value: "500+", label: "Faculty Members" },
-  { value: "10K+", label: "Research Papers" },
-  { value: "50+", label: "Departments" },
-  { value: "100%", label: "Digital Tracking" },
-];
+import { useEffect, useState } from "react";
+import { api, formatCompact, type PortalStats } from "@/lib/api";
 
 const StatsSection = () => {
+  const [portalStats, setPortalStats] = useState<PortalStats>({
+    facultyMembers: 500,
+    researchPapers: 10000,
+    departments: 50,
+    digitalTracking: 100,
+  });
+
+  useEffect(() => {
+    api.portalStats().then(setPortalStats);
+  }, []);
+
+  const liveStats = [
+    { value: formatCompact(portalStats.facultyMembers), label: "Faculty Members" },
+    { value: formatCompact(portalStats.researchPapers), label: "Research Papers" },
+    { value: formatCompact(portalStats.departments), label: "Departments" },
+    { value: `${portalStats.digitalTracking}%`, label: "Digital Tracking" },
+  ];
+
   return (
     <section className="py-16 border-y border-border bg-card">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {stats.map((stat, i) => (
+          {liveStats.map((stat, i) => (
             <motion.div
               key={stat.label}
               initial={{ opacity: 0, y: 20 }}

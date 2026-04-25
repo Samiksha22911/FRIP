@@ -3,6 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { useEffect, useState } from "react";
+import { api, type DashboardStats, type ActivityEntry } from "@/lib/api";
+import ActivityFeed from "@/components/ActivityFeed";
 
 const stats = [
   { label: "Total Faculty", value: "248", icon: Users, change: "+12 this month" },
@@ -38,6 +41,19 @@ const recentSubmissions = [
 ];
 
 const AdminDashboardHome = () => {
+  const [dashboardStats, setDashboardStats] = useState<DashboardStats>({ totalFaculty: 248, formsCreated: 18, pendingSubmissions: 64, approvedReports: 1247 });
+  const [activity, setActivity] = useState<ActivityEntry[]>([]);
+
+  useEffect(() => {
+    api.dashboardStats("admin").then(setDashboardStats);
+    api.activity("admin").then(setActivity);
+  }, []);
+
+  const liveStats = stats.map((stat) => ({
+    ...stat,
+    value: stat.label === "Total Faculty" ? String(dashboardStats.totalFaculty ?? 0) : stat.label === "Forms Created" ? String(dashboardStats.formsCreated ?? 0) : stat.label === "Pending Submissions" ? String(dashboardStats.pendingSubmissions ?? 0) : String(dashboardStats.approvedReports ?? 0),
+  }));
+
   return (
     <div className="space-y-6">
       <div>
@@ -47,7 +63,7 @@ const AdminDashboardHome = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat) => (
+        {liveStats.map((stat) => (
           <Card key={stat.label}>
             <CardContent className="p-4 md:p-5">
               <div className="flex items-center justify-between mb-3">
@@ -98,40 +114,42 @@ const AdminDashboardHome = () => {
         </Card>
       </div>
 
-      {/* Recent Submissions Table */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base font-serif">Recent Submissions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Faculty</TableHead>
-                <TableHead className="hidden sm:table-cell">Department</TableHead>
-                <TableHead className="hidden md:table-cell">Form</TableHead>
-                <TableHead className="hidden lg:table-cell">Date</TableHead>
-                <TableHead>Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {recentSubmissions.map((s) => (
-                <TableRow key={s.id}>
-                  <TableCell className="font-medium">{s.faculty}</TableCell>
-                  <TableCell className="hidden sm:table-cell">{s.dept}</TableCell>
-                  <TableCell className="hidden md:table-cell">{s.form}</TableCell>
-                  <TableCell className="hidden lg:table-cell">{s.date}</TableCell>
-                  <TableCell>
-                    <Badge variant={s.status === "Approved" ? "default" : s.status === "Rejected" ? "destructive" : "secondary"}>
-                      {s.status}
-                    </Badge>
-                  </TableCell>
+      <div className="grid lg:grid-cols-3 gap-4">
+        <Card className="lg:col-span-2">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-serif">Recent Submissions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Faculty</TableHead>
+                  <TableHead className="hidden sm:table-cell">Department</TableHead>
+                  <TableHead className="hidden md:table-cell">Form</TableHead>
+                  <TableHead className="hidden lg:table-cell">Date</TableHead>
+                  <TableHead>Status</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+              </TableHeader>
+              <TableBody>
+                {recentSubmissions.map((s) => (
+                  <TableRow key={s.id}>
+                    <TableCell className="font-medium">{s.faculty}</TableCell>
+                    <TableCell className="hidden sm:table-cell">{s.dept}</TableCell>
+                    <TableCell className="hidden md:table-cell">{s.form}</TableCell>
+                    <TableCell className="hidden lg:table-cell">{s.date}</TableCell>
+                    <TableCell>
+                      <Badge variant={s.status === "Approved" ? "default" : s.status === "Rejected" ? "destructive" : "secondary"}>
+                        {s.status}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+        <ActivityFeed items={activity} />
+      </div>
     </div>
   );
 };

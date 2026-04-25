@@ -1,6 +1,8 @@
 import { Clock, CheckCircle, FileText, Bell, MessageSquare, CalendarClock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useEffect, useState } from "react";
+import { api, type DashboardStats } from "@/lib/api";
 
 const stats = [
   { label: "Pending Forms", value: "3", icon: Clock },
@@ -25,8 +27,15 @@ const adminMessages = [
   { id: 2, subject: "New research tracking policy update", date: "2024-03-10" },
 ];
 
-const FacultyDashboardHome = () => (
-  <div className="space-y-6">
+const FacultyDashboardHome = () => {
+  const [dashboardStats, setDashboardStats] = useState<DashboardStats>({ pendingSubmissions: 3, submittedForms: 11, approvedReports: 8 });
+  useEffect(() => { api.dashboardStats("faculty").then(setDashboardStats); }, []);
+  const liveStats = stats.map((stat) => ({
+    ...stat,
+    value: stat.label === "Pending Forms" ? String(dashboardStats.pendingSubmissions ?? 0) : stat.label === "Submitted Forms" ? String(dashboardStats.submittedForms ?? 0) : String(dashboardStats.approvedReports ?? 0),
+  }));
+
+  return <div className="space-y-6">
     <div>
       <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">Faculty Dashboard</h1>
       <p className="text-muted-foreground mt-1">Track your research submissions and view your impact score.</p>
@@ -34,7 +43,7 @@ const FacultyDashboardHome = () => (
 
     {/* Stats */}
     <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-      {stats.map((stat) => (
+      {liveStats.map((stat) => (
         <Card key={stat.label}>
           <CardContent className="p-4 md:p-5">
             <div className="flex items-center justify-between mb-3">
@@ -102,7 +111,7 @@ const FacultyDashboardHome = () => (
         ))}
       </CardContent>
     </Card>
-  </div>
-);
+  </div>;
+};
 
 export default FacultyDashboardHome;

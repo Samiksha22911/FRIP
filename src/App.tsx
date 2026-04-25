@@ -9,6 +9,7 @@ import Login from "./pages/Login.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
 import HodDashboard from "./pages/HodDashboard.tsx";
 import FacultyDashboard from "./pages/FacultyDashboard.tsx";
+import StudentDashboard from "./pages/StudentDashboard.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/admin/*" element={<AdminDashboard />} />
           <Route path="/hod/*" element={<HodDashboard />} />
           <Route path="/faculty/*" element={<FacultyDashboard />} />
+          <Route path="/student/*" element={<StudentDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

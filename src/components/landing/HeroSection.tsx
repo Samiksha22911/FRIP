@@ -19,10 +19,9 @@ const HeroSection = () => {
           className="max-w-3xl mx-auto text-center"
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 mb-8">
-          <Sparkles className="h-4 w-4 text-accent" />
-            <span className="text-2xl font-large text-accent-foreground">Faculty Research Impact Portal</span>
+            <Sparkles className="h-4 w-4 text-accent" />
+            <span className="text-sm font-medium text-accent-foreground">Faculty Research Impact Portal</span>
           </div>
-          
 
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground leading-tight mb-6">
             Track Research.{" "}
