@@ -64,12 +64,12 @@ const Login = () => {
     else navigate("/faculty");
   };
 
-  const roles = [
-    { key: "admin" as const, label: "Admin" },
-    { key: "hod" as const, label: "HOD" },
-    { key: "faculty" as const, label: "Faculty" },
-    { key: "student" as const, label: "Student" },
-  ];
+const roles = [
+  { key: "admin" as const, label: "Admin" },
+  { key: "hod" as const, label: "HOD" },
+  { key: "faculty" as const, label: "Faculty" },
+  { key: "student" as const, label: "Student" },
+];
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -119,58 +119,67 @@ const Login = () => {
             Sign in to your account to continue.
           </p>
 
-          {/* Google Login */}
+<div className="grid grid-cols-2 gap-4 mb-6">
+  {roles.map((item) => (
+    <button
+      key={item.key}
+      type="button"
+      onClick={() => setRole(item.key)}
+      className={`p-3 rounded-lg border transition-all ${
+        role === item.key
+          ? "border-primary bg-primary/10"
+          : "border-gray-300"
+      }`}
+    >
+      {item.label}
+    </button>
+  ))}
+</div>
+         
           <div className="mb-6">
-            {/* <GoogleLogin
-              onSuccess={(credentialResponse) => {
-                console.log(credentialResponse);
-                toast.success("Google Login Success");
-              }}
-              onError={() => {
-                console.log("Login Failed, Try Again");
-                toast.error("Google Login Failed");
-              }}
-            /> */}
-
           <GoogleLogin
-            onSuccess={async (credentialResponse) => {
-            const response = await fetch("http://localhost:5000/auth/google-login", {
-               method: "POST",
-               headers: {
-               "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-            token: credentialResponse.credential,
-            }),
-           });
+  onSuccess={async (credentialResponse) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/google-login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token: credentialResponse.credential,
+          selectedRole: role,
+        }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    localStorage.setItem("fri-token", data.token);
-    localStorage.setItem("fri-user", JSON.stringify(data.user));
+      if (!response.ok) {
+        toast.error(data.message);
+        return;
+      }
 
-    if (data.user.role === "admin") navigate("/admin");
-    else if (data.user.role === "hod") navigate("/hod");
-    else if (data.user.role === "student") navigate("/student");
-    else navigate("/faculty");
+      localStorage.setItem("fri-token", data.token);
+      localStorage.setItem("fri-user", JSON.stringify(data.user));
+
+      navigate(`/${data.user.role}`);
+    } catch (error) {
+      toast.error("Login failed");
+    }
   }}
-  onError={() => console.log("Login Failed")}
+  onError={() => {
+    toast.error("Google Login Failed");
+  }}
 />
+ 
 
           </div>
 
-          {/* Normal login form */}
-          <form onSubmit={handleLogin} className="space-y-5">
-            <Button type="submit" className="w-full h-11" disabled={loading}>
-              {loading ? "Logging in..." : "Login"}
-            </Button>
-          </form>
+          
         </motion.div>
       </div>
     </div>
   );
+  
 };
-
-fetch(`${API_BASE_URL}/auth/google-login`)
 
 export default Login;

@@ -4,42 +4,47 @@ const { OAuth2Client } = require("google-auth-library");
 
 const router = express.Router();
 
-const client = new OAuth2Client("YOUR_CLIENT_ID");
+const CLIENT_ID =
+  "361045948459-hjfpqeacun8e16osvbkoljh16jk3io68.apps.googleusercontent.com";
 
+const client = new OAuth2Client(CLIENT_ID);
+
+// Google Login Route
 router.post("/google-login", async (req, res) => {
   try {
-    const { token } = req.body;
+    const { token, selectedRole } = req.body;
 
+    // Verify Google token
     const ticket = await client.verifyIdToken({
       idToken: token,
-      audience: "YOUR_CLIENT_ID",
+      audience: CLIENT_ID,
     });
 
     const payload = ticket.getPayload();
-    const email = payload.email;
 
-    let role = "";
-
-    if (email.endsWith("@mitsgwl.ac.in")) role = "student";
-    else if (email.endsWith("@mitsgwalior.in")) role = "faculty";
-    else return res.status(403).json({ message: "Unauthorized" });
-
+    // Demo mode: allow any gmail + selected role
     const user = {
-      email,
+      email: payload.email,
       name: payload.name,
-      role,
+      picture: payload.picture,
+      role: selectedRole,
     };
 
+    // Generate JWT token
     const appToken = jwt.sign(user, "secret_key", {
       expiresIn: "7d",
     });
 
-    res.json({
+    return res.status(200).json({
       token: appToken,
       user,
     });
   } catch (error) {
-    res.status(500).json({ message: "Login failed" });
+    console.log("Google Login Error:", error);
+
+    return res.status(500).json({
+      message: "Login failed",
+    });
   }
 });
 

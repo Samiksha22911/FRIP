@@ -10,7 +10,15 @@ const MitsLogo = () => (
   <img 
     src="/mits-logo.png" 
     alt="MITS Logo" 
-    className="h-7 w-auto object-contain"
+    className="h-12 w-auto object-contain"
+  />
+);
+
+const CollegeName = () => (
+  <img 
+    src="/college-name.png"
+    alt="MITS Name" 
+    className="h-20 w-auto object-contain"
   />
 );
 
@@ -91,10 +99,10 @@ const DashboardLayout = ({ children, role, navItems }: DashboardLayoutProps) => 
               <MitsLogo />
             <div>
               <div className="font-serif font-bold text-sm">FRI Portal</div>
-              <div className="text-xs text-sidebar-foreground/50">{roleLabels[role]} Panel</div>
+              <div className="font-serif font-bold text-sidebar-foreground/50">{roleLabels[role]} Panel</div>
             </div>
           </Link>
-        </div>
+        </div> 
 
         <nav className="flex-1 p-3 space-y-0.5">
           {navItems.map((item) => {
@@ -169,7 +177,7 @@ const DashboardLayout = ({ children, role, navItems }: DashboardLayoutProps) => 
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Navbar */}
-        <header className="h-14 border-b border-border bg-card text-card-foreground flex items-center justify-between gap-3 px-4 md:px-6 flex-shrink-0">
+        <header className="h-20 border-b border-border bg-card text-card-foreground flex items-center justify-between gap-3 px-4 md:px-6 flex-shrink-0">
           <div className="flex items-center gap-3 min-w-0">
             <button
               onClick={() => setMobileOpen(true)}
@@ -177,11 +185,10 @@ const DashboardLayout = ({ children, role, navItems }: DashboardLayoutProps) => 
             >
               <Menu className="h-5 w-5 text-foreground" />
             </button>
-            <h2 className="font-serif font-semibold text-foreground text-lg truncate">{currentPageTitle}</h2>
           </div>
-          <div className="hidden md:block flex-1 max-w-md">
-            <GlobalSearch navItems={navItems} />
-          </div>
+
+          <div className="hidden md:flex flex-1 justify-center"><CollegeName /></div>
+
           <div className="flex items-center gap-1">
             <ThemeToggle />
             {role !== "admin" && (

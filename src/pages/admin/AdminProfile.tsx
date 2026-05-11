@@ -6,7 +6,7 @@ const AdminProfile = () => (
     defaults={{
       name: "Admin User",
       email: "admin@fri.edu",
-      institute: "Faculty Research Institute",
+      institute: "Madhav Institute of Technology & Science",
       department: "Administration",
       designation: "Portal Administrator",
       phone: "+91 90000 11111",
