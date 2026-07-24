@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { api, formatCompact, type PortalStats } from "@/lib/api";
+import { api, formatCompact } from "@/lib/api";
 
 const StatsSection = () => {
-  const [portalStats, setPortalStats] = useState<PortalStats>({
+  const [portalStats, setPortalStats] = useState({
     facultyMembers: 500,
     researchPapers: 10000,
     departments: 50,
@@ -15,10 +15,22 @@ const StatsSection = () => {
   }, []);
 
   const liveStats = [
-    { value: formatCompact(portalStats.facultyMembers), label: "Faculty Members" },
-    { value: formatCompact(portalStats.researchPapers), label: "Research Papers" },
-    { value: formatCompact(portalStats.departments), label: "Departments" },
-    { value: `${portalStats.digitalTracking}%`, label: "Digital Tracking" },
+    {
+      value: formatCompact(portalStats.facultyMembers),
+      label: "Faculty Members",
+    },
+    {
+      value: formatCompact(portalStats.researchPapers),
+      label: "Research Papers",
+    },
+    {
+      value: formatCompact(portalStats.departments),
+      label: "Departments",
+    },
+    {
+      value: `${portalStats.digitalTracking}%`,
+      label: "Digital Tracking",
+    },
   ];
 
   return (
@@ -34,8 +46,13 @@ const StatsSection = () => {
               transition={{ delay: i * 0.1, duration: 0.5 }}
               className="text-center"
             >
-              <div className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-1">{stat.value}</div>
-              <div className="text-sm text-muted-foreground">{stat.label}</div>
+              <div className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-1">
+                {stat.value}
+              </div>
+
+              <div className="text-sm text-muted-foreground">
+                {stat.label}
+              </div>
             </motion.div>
           ))}
         </div>

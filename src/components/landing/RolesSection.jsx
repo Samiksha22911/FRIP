@@ -42,7 +42,10 @@ const roles = [
 
 const RolesSection = () => {
   return (
-    <section id="roles" className="py-20 md:py-28 bg-card border-y border-border">
+    <section
+      id="roles"
+      className="py-20 md:py-28 bg-card border-y border-border"
+    >
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -53,8 +56,10 @@ const RolesSection = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Built for Every Role
           </h2>
+
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Three distinct dashboards designed for the unique needs of each user type.
+            Three distinct dashboards designed for the unique needs of each user
+            type.
           </p>
         </motion.div>
 
@@ -69,13 +74,22 @@ const RolesSection = () => {
               className="p-8 rounded-xl bg-background border border-border"
               style={{ boxShadow: "var(--card-shadow)" }}
             >
-              <div className={`w-12 h-12 rounded-xl ${role.color} flex items-center justify-center mb-5`}>
+              <div
+                className={`w-12 h-12 rounded-xl ${role.color} flex items-center justify-center mb-5`}
+              >
                 <role.icon className="h-6 w-6" />
               </div>
-              <h3 className="font-serif text-2xl font-bold text-foreground mb-4">{role.title}</h3>
+
+              <h3 className="font-serif text-2xl font-bold text-foreground mb-4">
+                {role.title}
+              </h3>
+
               <ul className="space-y-3">
                 {role.items.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
+                  <li
+                    key={item}
+                    className="flex items-start gap-2 text-sm text-muted-foreground"
+                  >
                     <span className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0" />
                     {item}
                   </li>
